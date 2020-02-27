@@ -1,2 +1,8 @@
 # game_of_life
-  Reste des bug ><"
+
+Todo List:  
+  - [x] pouvoir modifier sans recharger la page
+  - [ ] debuger les regles ><"
+  - [ ] modifier la taille du terrain en direct
+
+![](game_of_life/images/inutile_sur_20.gif)

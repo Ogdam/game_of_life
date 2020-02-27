@@ -1,35 +1,33 @@
 function neighbor_number(x, y, matrice){
-  next = 0
+  var neighbor = 0;
   for(var i=x-1; i<=x+1; i++){
     for(var j=y-1; j<=y+1; j++){
-      try{
-        if (i == x && j == y)
+        if ((i == x && j == y) || i < 0 || j < 0 || i >= matrice.length || j >= matrice[i].length)
           continue;
-        next += matrice[i][j]? Number.isInteger(matrice[i][j]): 0;
-      }catch(e){}
+        neighbor += matrice[i][j];
     }
   }
-  return next;
+  return neighbor;
 }
 
+function test_if_resurect_or_not(alive, neighbor){
+  if (alive == 1 && (neighbor == 2 || neighbor == 3))
+    return 1;
+  else if (alive == 1 )
+    return 0;
 
-function test_if_resurect_or_not(value, next){
-  if (value == 1 && (next == 2 || next == 3))
+  if (alive == 0 && neighbor == 3)
     return 1;
-  if (value == 1 && (next < 2 || next > 3))
+  else if (alive == 0)
     return 0;
-  if (value == 0 && next != 3)
-    return 0;
-  if (value == 0 && next == 3)
-    return 1;
 }
 
-function update_matrice(matrice){
-  for(var i=0;  i<matrice.length; i++){
-    for(var j=0; j<matrice[i].length; j++){
-      new_matrice[i][j] = test_if_resurect_or_not(matrice[i][j], neighbor_number(i, j, matrice))
+function update_matrice(base_matrice){
+  var new_matrice = base_matrice.slice();
+  for(var i=0;i<new_matrice.length;i++){
+    for(var j=0;j<new_matrice[i].length;j++){
+      new_matrice[i][j] = test_if_resurect_or_not(base_matrice[i][j], neighbor_number(i, j, base_matrice));
     }
   }
-  new_matrice;
-  return new_matrice
+  return new_matrice;
 }

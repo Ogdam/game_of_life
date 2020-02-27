@@ -1,0 +1,15 @@
+#game_of_life .case.alive{
+  background-color: black;
+}
+
+
+#game_of_life .case{
+  width: 10px;
+  height: 10px;
+  border: grey solid 2px;
+  background-color: white;
+}
+
+table{
+    border-collapse: collapse;
+}

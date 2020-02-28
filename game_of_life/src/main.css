@@ -13,3 +13,18 @@
 table{
     border-collapse: collapse;
 }
+
+input{
+  max-width:70px;
+}
+
+#start, #stop, #restart{
+  border:none;
+  background: none;
+}
+
+.page{
+  position: relative;; /* postulat de départ */
+  left: 5%; /* à 50%/50% du parent référent */
+  top: -5%;
+}

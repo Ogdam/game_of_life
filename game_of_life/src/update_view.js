@@ -17,16 +17,14 @@ function create_empty_basic_view(){
 
     $('td.case').on("click", function(){
       $(this).toggleClass("alive");
-      console.log(1);
     });
 }
 
 ///////////////////////////////// LOAD GAME BOARD //////////////////////////////
 function get_game(){
   var matrice = [];
-  var cpt = -1;
+  var cpt = 0;
   $("#game_of_life").children().each(function(){
-    cpt +=1;
     matrice.push([]);
     $(this).children().each(function() {
       if($(this).hasClass("alive")){
@@ -34,6 +32,7 @@ function get_game(){
       else{
         matrice[cpt].push(0);}
     });
+    cpt +=1;
   });
   return matrice;
 }
@@ -42,11 +41,11 @@ function get_game(){
 
 
 function lets_play(matrice){
+  matrice = update_matrice(matrice);
+  draw_new_board(matrice);
     setTimeout(function() {
-        matrice = update_matrice(matrice);
-        draw_new_board(matrice);
-        if (Play == true)
-          lets_play(matrice);
+      if(Play == true)
+        lets_play(matrice);
     }, 300);
 }
 
@@ -93,8 +92,7 @@ $( document ).ready(function() {
   $('#start').on("click", function(){
     console.log("let the game crash");
     Play = true
-    matrice = get_game();
-    lets_play(matrice.slice());
+    lets_play(get_game().slice());
   });
 
   $('#stop').on("click", function(){

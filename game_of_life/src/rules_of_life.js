@@ -23,7 +23,9 @@ function test_if_resurect_or_not(alive, neighbor){
 }
 
 function update_matrice(base_matrice){
-  var new_matrice = base_matrice.slice();
+  var new_matrice = base_matrice.map(function(arr) {
+    return arr.slice();
+  });
   for(var i=0;i<new_matrice.length;i++){
     for(var j=0;j<new_matrice[i].length;j++){
       new_matrice[i][j] = test_if_resurect_or_not(base_matrice[i][j], neighbor_number(i, j, base_matrice));

@@ -1,0 +1,10 @@
+.controls {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.controls button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}

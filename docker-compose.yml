@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/backend/app  # Permet le hot-reload du code Python
+    environment:
+      - ENV=development
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/gol-fe:/frontend
+      - /frontend/node_modules # Évite d'écraser les modules node du conteneur
+    depends_on:
+      - backend

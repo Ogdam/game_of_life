@@ -17,12 +17,13 @@ async def websocket_endpoint(websocket: WebSocket):
             message = await websocket.receive_json()
 
             msg_type = message.get("type")
+            
+            print(msg_type)
 
             # ---- RECEPTION CLIENT → SERVEUR ----
             if msg_type == "start":
                 if not controller.get_scheduled():
                     controller.run()
-                    print(controller.get_scheduled())
                     await app.state.runner.schedule(client_id, controller)
 
             elif msg_type == "stop":
@@ -46,9 +47,10 @@ async def websocket_endpoint(websocket: WebSocket):
             # ---- PUSH SERVEUR → CLIENT ----
             await app.state.ws_manager.send(client_id, {
                 "status": controller.get_status(),
+                "tick": controller.get_tick(),
                 "grid": controller.game.get_grid_full_state(),
             })
 
-    except WebSocketDisconnect:
+    except WebSocketDisconnect as err:
         app.state.ws_manager.disconnect(client_id)
         app.state.session_manager.remove(client_id)

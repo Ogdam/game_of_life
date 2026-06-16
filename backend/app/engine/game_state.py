@@ -1,4 +1,4 @@
-from engine.rules import next_generation
+from app.engine.rules import next_generation
 
 
 class GameState():

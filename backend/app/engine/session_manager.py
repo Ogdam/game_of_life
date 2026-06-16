@@ -1,4 +1,4 @@
-from engine.controller import Controller
+from app.engine.controller import Controller
 
 
 class SessionManager:

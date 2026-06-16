@@ -2,8 +2,8 @@ import asyncio
 import heapq
 import time
 
-from engine.session_manager import SessionManager
-from engine.controller import State
+from app.engine.session_manager import SessionManager
+from app.engine.controller import State
 
 
 class Runner():

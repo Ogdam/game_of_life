@@ -3,14 +3,14 @@ import asyncio
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from websocket.dispatcher import ws_dispatcher
-from engine.session_manager import SessionManager
-from engine.runner import Runner
+from app.websocket.dispatcher import ws_dispatcher
+from app.engine.session_manager import SessionManager
+from app.engine.runner import Runner
 
-from api.rest import router as rest_router
+from app.api.rest import router as rest_router
 
-from websocket.manager import WSManager
-from websocket.endpoint import router as ws_router
+from app.websocket.manager import WSManager
+from app.websocket.endpoint import router as ws_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

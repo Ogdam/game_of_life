@@ -1,6 +1,6 @@
 from enum import Enum
 
-from engine.game_state import GameState
+from app.engine.game_state import GameState
 
 class State(Enum):
     PAUSE = "pause"

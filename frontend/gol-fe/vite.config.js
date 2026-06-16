@@ -7,4 +7,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ['pixi.js'],
   },
+  server: {
+    watch: {
+      usePolling: true
+    }
+  }
 })

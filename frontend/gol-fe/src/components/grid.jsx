@@ -4,7 +4,13 @@ import { useEffect, useRef } from 'react';
 import { Application, Graphics } from 'pixi.js';
 import {cantor_calcul, getCellColor} from '../utils/common';
 
+import { useSimulationStore } from "../stores/store";
+
 export default function Grid(props) {
+    const toggleCell = useSimulationStore((s) => s.toggleCell);
+    const currentGrid = useSimulationStore((s) => s.currentGrid);
+    const generation = useSimulationStore((s) => s.generation);
+
     const containerRef = useRef(null);
     const appRef = useRef(null);
     const renderedCells = useRef(new Map());
@@ -39,7 +45,7 @@ export default function Grid(props) {
                 const pos = event.global;
                 const x = Math.floor(pos.x / size);
                 const y = Math.floor(pos.y / size);
-                props.toggle_cell(x, y);
+                toggleCell(x, y);
             });
         })();
 
@@ -65,7 +71,7 @@ export default function Grid(props) {
         const map = renderedCells.current;
 
         // ADD / UPDATE
-        for (const [id, data] of props.grid) {
+        for (const [id, data] of currentGrid) {
             const cell = map.get(id);
 
             if (!cell) {
@@ -83,19 +89,19 @@ export default function Grid(props) {
 
             gfx.clear();
             gfx.rect(0, 0, size, size);
-            gfx.fill(getCellColor(props.generation, data.tick));
+            gfx.fill(getCellColor(generation, data.tick));
         }
 
         // REMOVE
         for (const [id, cell] of map.entries()) {
-            if (props.grid.has(id)) continue;
+            if (currentGrid.has(id)) continue;
 
             app.stage.removeChild(cell);
             cell.destroy();
             map.delete(id);
         }
 
-    }, [props.grid, props.generation]);
+    }, [currentGrid, generation]);
 
     return <div ref={containerRef} />;
 }

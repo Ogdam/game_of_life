@@ -6,5 +6,5 @@
 - [x] Mettre les boutons sur le coté gauche
 - [x] Mettre la génération sur le coté gauche
 - [x] Ajouter "Cornwell Game Of Life" en haut du coté gauche
-- [ ] Rajouter un slider / bouton pour changer la vitesse des générations
+- [x] Rajouter un slider / bouton pour changer la vitesse des générations
 

@@ -7,18 +7,14 @@ function Controls() {
     const stop = useSimulationStore((s) => s.stop);
     const reset = useSimulationStore((s) => s.reset);
     const isRunning = useSimulationStore((s) => s.isRunning);
+    const setGridSize = useSimulationStore((s) => s.setGridSize);
+    const setTickRate = useSimulationStore((s) => s.setTickRate);
+    const numberCellWidth = useSimulationStore((s) => s.numberCellWidth);
+    const numberCellHeight = useSimulationStore((s) => s.numberCellHeight);
 
-    const [width, setWidth] = useState(50);
-    const [height, setHeight] = useState(50);
+    const [width, setWidth] = useState(numberCellWidth);
+    const [height, setHeight] = useState(numberCellHeight);
     const [speed, setSpeed] = useState(1);
-
-    const applyGridSize = () => {
-        console.log("grid size", width, height);
-    };
-
-    const applySpeed = () => {
-        console.log("speed", speed);
-    };
 
     return (
         <div className="d-flex flex-column gap-4 p-2">
@@ -50,12 +46,15 @@ function Controls() {
             </div>
 
             {/* 2. GRID SIZE */}
-            <div className="d-flex flex-column gap-2">
+            <div className="d-flex flex-row gap-2">
                 <input
                     type="number"
                     className="form-control"
                     value={width}
-                    onChange={(e) => setWidth(Number(e.target.value))}
+                    onChange={(e) => {
+                        setWidth(Number(e.target.value))
+                        setGridSize(Number(e.target.value), height)
+                    }}
                     placeholder="Width"
                 />
 
@@ -63,40 +62,31 @@ function Controls() {
                     type="number"
                     className="form-control"
                     value={height}
-                    onChange={(e) => setHeight(Number(e.target.value))}
+                    onChange={(e) => {
+                        setHeight(Number(e.target.value))
+                        setGridSize(width, Number(e.target.value))
+                    }}
                     placeholder="Height"
                 />
-
-                <button
-                    className="btn btn-primary"
-                    onClick={applyGridSize}
-                >
-                    Apply grid
-                </button>
             </div>
 
             {/* 3. SPEED */}
             <div className="d-flex flex-column gap-2">
                 <label className="form-label">
-                    Speed ({speed}x)
+                    {(1 / speed).toFixed(2)} tick per second ({(speed).toFixed(1)})
                 </label>
 
                 <input
                     type="range"
-                    className="form-range"
                     min="0.5"
-                    max="2"
+                    max="3"
                     step="0.1"
                     value={speed}
-                    onChange={(e) => setSpeed(Number(e.target.value))}
+                    onChange={(e) => {
+                        setSpeed(Number(e.target.value))
+                        setTickRate(1/Number(e.target.value))
+                    }}
                 />
-
-                <button
-                    className="btn btn-primary"
-                    onClick={applySpeed}
-                >
-                    Apply speed
-                </button>
             </div>
 
         </div>

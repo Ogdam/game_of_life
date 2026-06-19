@@ -8,7 +8,7 @@ class State(Enum):
     
 class Controller():
 
-    def __init__(self, height=100, width=100):
+    def __init__(self, height=90, width=90):
         self.state = State.PAUSE
         self.speed = 1
         self.game = GameState(height, width)
@@ -34,6 +34,9 @@ class Controller():
         
     def get_scheduled(self):
         return self.scheduled
+    
+    def set_size(self, height: int, width: int):
+        self.game.set_size(height,width)
         
     def step(self):
         if self.state == State.RUNNING:

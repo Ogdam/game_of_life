@@ -41,6 +41,11 @@ async def websocket_endpoint(websocket: WebSocket):
                 y = message["y"]
                 controller.game.toggle_cell(x, y)
                 
+            elif msg_type == "grid_size":
+                width = message["width"]
+                height = message["height"]
+                controller.game.set_size(width, height)
+                
             elif msg_type == "next_step":
                 controller.game.next_step()
 

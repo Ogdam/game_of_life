@@ -6,11 +6,17 @@ export const useSimulationStore = create((set, get) => ({
   isRunning: false,
   currentGrid: new Map(),
   send: null,
+  numberCellHeight: 90,
+  numberCellWidth: 90,
 
   setSend: (sendFn) => set({ send: sendFn }),
 
   setGeneration: (g) => set({ generation: g }),
   setIsRunning: (v) => set({ isRunning: v }),
+
+  setNumberCellWidth: (w) => set({ numberCellWidth: w }),
+  setNumberCellHeight: (h) => set({ numberCellHeight: h }),
+
 
   setFullGrid: (grid, tick) => {
     const newGrid = new Map();
@@ -74,6 +80,16 @@ export const useSimulationStore = create((set, get) => ({
   toggleCell: (x, y) => {
     const send = get().send;
     send?.({ type: "toggle_cell", x, y });
+  },
+
+  setTickRate : (speed) => {
+    const send = get().send;
+    send?.({ type: "set_speed", speed });
+  },
+
+  setGridSize: (width, height) => {
+    const send = get().send;
+    send?.({ type: "grid_size", width, height});
   },
 
 }));

@@ -7,8 +7,10 @@ export default function SideBar() {
     
     return (
         <div className="sidebar">
-            <p><strong>Cornwell Game Of Life</strong></p>
-            <p>{generation}</p>
+            <div className="d-flex flex-column gap-2 text-center">
+                <p><strong>Cornwell Game Of Life</strong></p>
+                <p>{generation}</p>
+            </div>
             <Controls/>
         </div>
     );

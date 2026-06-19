@@ -20,6 +20,10 @@ export default function initSocketBridge() {
             );
         } else {
             store.setFullGrid(message.grid.grid, tick);
+            store.setNumberCellHeight(message.grid.height)
+            store.setNumberCellWidth(message.grid.width)
         }
+
+        
     })
 }

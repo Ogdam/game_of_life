@@ -20,8 +20,8 @@ function App() {
                 </div>
                 <div className="col-11 d-flex justify-content-center align-items-center bg-secondary">
                     <Grid 
-                        height={900} 
-                        width={900}
+                        gridWidth={900} 
+                        gridHeight={900}
                     ></Grid>
                 </div>
             </div>

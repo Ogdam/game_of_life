@@ -1,5 +1,5 @@
 import "./controls.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSimulationStore } from "../stores/store";
 
 function Controls() {
@@ -15,6 +15,34 @@ function Controls() {
     const [width, setWidth] = useState(numberCellWidth);
     const [height, setHeight] = useState(numberCellHeight);
     const [speed, setSpeed] = useState(1);
+
+    useEffect(() => {
+        const onKeyDown = (e) => {
+            if (e.code !== "Space") return;
+
+            e.preventDefault();
+
+            const { isRunning, start, stop } = useSimulationStore.getState();
+            if (isRunning) stop();
+            else start();
+        };
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, []);
+
+    useEffect(() => {
+        const onKeyDown = (e) => {
+            if (e.key.toLowerCase() === "r") {
+                e.preventDefault();
+                const { reset } = useSimulationStore.getState();
+                reset();
+            }
+        };
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [reset]);
 
     return (
         <div className="d-flex flex-column gap-4 p-2">

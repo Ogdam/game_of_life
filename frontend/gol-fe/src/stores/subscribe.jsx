@@ -12,6 +12,8 @@ export default function initSocketBridge() {
     store.setGeneration(tick)
     store.setIsRunning(message.status === 'running')
 
+    if (message.rules) store.setRules(message.rules)
+
     if (message.grid?.birth) {
       store.applyBirthDeath(message.grid.birth, message.grid.death, tick)
     } else {

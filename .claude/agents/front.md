@@ -25,5 +25,6 @@ Respecte aussi :
 - @docs/git-workflow.md (commit/branche)
 - @docs/agents-policy.md (pas de création/duplication d'agent)
 - @docs/code-quality.md (qualité de code)
+- @docs/design-system.md (charte graphique, couleurs, composants)
 
 Lis uniquement les fichiers nécessaires à la tâche demandée, dans /frontend.

@@ -5,6 +5,7 @@ Architecture & contexte métier : @docs/architecture.md
 Règles Git : @docs/git-workflow.md
 Politique agents : @docs/agents-policy.md
 Qualité de code : @docs/code-quality.md
+Charte graphique : @docs/design-system.md
 
 ## Sobriété token
 - Lire uniquement les fichiers/sections nécessaires à la tâche

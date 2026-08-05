@@ -7,7 +7,7 @@ grid = [
 ]
 
 - **Vite** (build tool - plus rapide que CRA)
-- **React 18+** (UI)
+- **React 19+** (UI)
 - **TypeScript** (typage)
 - **Zustand** (state management léger)
 - **Canvas** (rendu grille, pas DOM)
@@ -23,37 +23,21 @@ grid = [
 ```json
 // Client → Server
 {"type": "start"}
-{"type": "pause"}
+{"type": "stop"}
 {"type": "reset"}
 {"type": "toggle_cell", "x": 5, "y": 10}
 {"type": "set_speed", "speed": 200}
+{"type": "grid_size", "width": 90, "height": 90}
+{"type": "next_step"}
 
-// Server → Client (broadcast)
-{"type": "grid_update", "grid": [[1,0], [1,1]]}
-{"type": "tick", "value": 42}
-```
-
----
-
-## 6. JSON Contract (IMPORTANT)
-
-### Request body pour REST
-```json
+// Server → Client (broadcast après chaque message reçu, pas d'enveloppe "type")
 {
-  "grid": [[1,0], [1,1], [0,1]],
-  "width": 90,
-  "height": 90
-}
-```
-
-### Response body
-```json
-{
-  "success": true,
-  "data": {
-    "grid": [[1,0], [1,1], [0,1]],
-    "tick": 5,
-    "status": "running"
+  "status": "running",
+  "tick": 42,
+  "grid": {
+    "width": 90,
+    "height": 90,
+    "grid": [[1, 0], [1, 1]]
   }
 }
 ```

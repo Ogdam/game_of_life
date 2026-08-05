@@ -53,3 +53,9 @@ class Controller:
 
     def get_speed(self):
         return self.speed
+
+    def set_rules(self, rules: dict):
+        self.game.set_rules(rules)
+
+    def get_rules(self):
+        return self.game.rules

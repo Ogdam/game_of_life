@@ -1,9 +1,16 @@
-import './controls.css'
 import { useState, useEffect } from 'react'
 import { useSimulationStore } from '../stores/store'
 
 function parseRuleInput(value) {
   return value.split(',').map(Number).filter(Number.isInteger)
+}
+
+function SectionTitle({ icon, label }) {
+  return (
+    <h2 className="section-title">
+      <i className={`bi ${icon}`}></i> {label}
+    </h2>
+  )
 }
 
 function Controls() {
@@ -56,21 +63,23 @@ function Controls() {
     <div className="d-flex flex-column gap-4 p-2">
       {/* 1. PLAY CONTROLS */}
       <div className="d-flex flex-column gap-2">
-        <button className="btn btn-success" onClick={start} disabled={isRunning}>
+        <SectionTitle icon="bi-joystick" label="Contrôles" />
+        <button className="btn btn-gol-start" onClick={start} disabled={isRunning}>
           <i className="bi bi-play-fill"></i> Start
         </button>
 
-        <button className="btn btn-warning" onClick={stop} disabled={!isRunning}>
+        <button className="btn btn-gol-pause" onClick={stop} disabled={!isRunning}>
           <i className="bi bi-pause-fill"></i> Pause
         </button>
 
-        <button className="btn btn-danger" onClick={reset}>
+        <button className="btn btn-gol-reset" onClick={reset}>
           <i className="bi bi-arrow-counterclockwise"></i> Reset
         </button>
       </div>
 
       {/* 2. GRID SIZE */}
       <div className="d-flex flex-row gap-2">
+        <SectionTitle icon="bi-grid-3x3-gap" label="Taille de la grille" />
         <input
           type="number"
           className="form-control"
@@ -96,12 +105,14 @@ function Controls() {
 
       {/* 3. SPEED */}
       <div className="d-flex flex-column gap-2">
+        <SectionTitle icon="bi-speedometer2" label="Vitesse" />
         <label className="form-label">
           {(1 / speed).toFixed(2)} tick per second ({speed.toFixed(1)})
         </label>
 
         <input
           type="range"
+          className="form-range"
           min="0.5"
           max="3"
           step="0.1"
@@ -115,6 +126,7 @@ function Controls() {
 
       {/* 4. RULES */}
       <div className="d-flex flex-column gap-2">
+        <SectionTitle icon="bi-sliders2" label="Règles" />
         <label className="form-label">Naissance (voisins)</label>
         <input
           type="text"

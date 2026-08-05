@@ -14,6 +14,7 @@ class Runner:
         self.running = True
         self._task = None
         self._heap = []
+        self._background_tasks: set = set()
 
     async def start(self):
         if self._task is None or self._task.done():
@@ -67,6 +68,7 @@ class Runner:
                             },
                         }
                     )
+                    self._schedule_persist(client_id)
 
                     next_tick = controller.next_tick + controller.speed
                     controller.next_tick = next_tick
@@ -74,6 +76,18 @@ class Runner:
                     heapq.heappush(self._heap, (next_tick, client_id))
 
         except asyncio.CancelledError:
+            pass
+
+    def _schedule_persist(self, client_id):
+        task = asyncio.create_task(self._persist_safely(client_id))
+        self._background_tasks.add(task)
+        task.add_done_callback(self._background_tasks.discard)
+
+    async def _persist_safely(self, client_id):
+        try:
+            await self.session_manager.persist(client_id)
+        except Exception:  # pylint: disable=broad-exception-caught
+            # La persistance ne doit jamais casser la boucle de tick (hot path).
             pass
 
     async def stop(self):

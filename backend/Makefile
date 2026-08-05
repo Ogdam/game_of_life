@@ -1,4 +1,4 @@
-.PHONY: lint format format-check test
+.PHONY: lint format format-check test migrate
 
 lint:
 	PYTHONPATH=.:app pylint app
@@ -11,3 +11,6 @@ format-check:
 
 test:
 	cd app && pytest
+
+migrate:
+	alembic upgrade head

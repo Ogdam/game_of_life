@@ -23,6 +23,9 @@ class SessionModel(Base):  # pylint: disable=too-few-public-methods
     speed: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     tick: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     grid: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    rules: Mapped[dict] = mapped_column(
+        JSONB, nullable=False, default=lambda: {"birth": [3], "survive": [2, 3]}
+    )
     created_at: Mapped[datetime] = mapped_column(
         server_default=func.now(),  # pylint: disable=not-callable
         nullable=False,

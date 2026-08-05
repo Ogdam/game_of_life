@@ -2,6 +2,10 @@ import './controls.css'
 import { useState, useEffect } from 'react'
 import { useSimulationStore } from '../stores/store'
 
+function parseRuleInput(value) {
+  return value.split(',').map(Number).filter(Number.isInteger)
+}
+
 function Controls() {
   const start = useSimulationStore((s) => s.start)
   const stop = useSimulationStore((s) => s.stop)
@@ -11,10 +15,14 @@ function Controls() {
   const setTickRate = useSimulationStore((s) => s.setTickRate)
   const numberCellWidth = useSimulationStore((s) => s.numberCellWidth)
   const numberCellHeight = useSimulationStore((s) => s.numberCellHeight)
+  const rules = useSimulationStore((s) => s.rules)
+  const setSimulationRules = useSimulationStore((s) => s.setSimulationRules)
 
   const [width, setWidth] = useState(numberCellWidth)
   const [height, setHeight] = useState(numberCellHeight)
   const [speed, setSpeed] = useState(1)
+  const [birthInput, setBirthInput] = useState(rules.birth.join(','))
+  const [surviveInput, setSurviveInput] = useState(rules.survive.join(','))
 
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -102,6 +110,33 @@ function Controls() {
             setSpeed(Number(e.target.value))
             setTickRate(1 / Number(e.target.value))
           }}
+        />
+      </div>
+
+      {/* 4. RULES */}
+      <div className="d-flex flex-column gap-2">
+        <label className="form-label">Naissance (voisins)</label>
+        <input
+          type="text"
+          className="form-control"
+          value={birthInput}
+          onChange={(e) => {
+            setBirthInput(e.target.value)
+            setSimulationRules(parseRuleInput(e.target.value), parseRuleInput(surviveInput))
+          }}
+          placeholder="ex: 3"
+        />
+
+        <label className="form-label">Survie (voisins)</label>
+        <input
+          type="text"
+          className="form-control"
+          value={surviveInput}
+          onChange={(e) => {
+            setSurviveInput(e.target.value)
+            setSimulationRules(parseRuleInput(birthInput), parseRuleInput(e.target.value))
+          }}
+          placeholder="ex: 2,3"
         />
       </div>
     </div>

@@ -7,6 +7,9 @@
 
 NEIGHBORS = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
 
+DEFAULT_BIRTH = frozenset({3})
+DEFAULT_SURVIVE = frozenset({2, 3})
+
 
 def get_neighbors(cell) -> set[tuple[int]]:
     return {(cell[0] + dx, cell[1] + dy) for dx, dy in NEIGHBORS}
@@ -14,9 +17,13 @@ def get_neighbors(cell) -> set[tuple[int]]:
 
 def next_generation(
     alive: set,
+    birth: set = DEFAULT_BIRTH,
+    survive: set = DEFAULT_SURVIVE,
 ) -> tuple[set[tuple[int]], set[tuple[int]], set[tuple[int]]]:
     """
     alive : set([tuple, tuple]) - liste des cellules vivantes
+    birth : set[int] - nombres de voisins déclenchant une naissance
+    survive : set[int] - nombres de voisins permettant la survie
     on recupere la liste des voisins de chaque cellules vivantes
     on va ensuite regarder le nombre de voisins de chaque cellule récupéré
     """
@@ -33,10 +40,10 @@ def next_generation(
         neighbors = get_neighbors(cell)
         count = sum(1 for n in neighbors if n in alive)
         if cell in alive:
-            if count in [2, 3]:
+            if count in survive:
                 next_alive.add(cell)
         else:
-            if count == 3:
+            if count in birth:
                 born_cells.add(cell)
                 next_alive.add(cell)
     dead_cells = alive - next_alive

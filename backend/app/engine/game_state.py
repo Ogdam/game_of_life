@@ -1,4 +1,4 @@
-from app.engine.rules import next_generation
+from app.engine.rules import DEFAULT_BIRTH, DEFAULT_SURVIVE, next_generation
 
 
 class GameState:
@@ -9,6 +9,7 @@ class GameState:
         self.grid = set()
         self.birth = set()
         self.death = set()
+        self.rules = {"birth": set(DEFAULT_BIRTH), "survive": set(DEFAULT_SURVIVE)}
 
     def reset_grid(self):
         self.grid = set()
@@ -36,5 +37,13 @@ class GameState:
             "grid": list(self.grid),
         }
 
+    def set_rules(self, rules: dict):
+        self.rules = {
+            "birth": set(rules["birth"]),
+            "survive": set(rules["survive"]),
+        }
+
     def next_step(self):
-        self.grid, self.birth, self.death = next_generation(self.grid)
+        self.grid, self.birth, self.death = next_generation(
+            self.grid, self.rules["birth"], self.rules["survive"]
+        )

@@ -1,5 +1,6 @@
 from fastapi import WebSocket
 
+
 class WSManager:
     def __init__(self):
         self.clients: dict = {}
@@ -10,11 +11,11 @@ class WSManager:
 
     def disconnect(self, client_id: str):
         self.clients.pop(client_id, None)
-           
+
     async def send(self, client_id: str, data: dict):
         try:
             ws = self.clients.get(client_id)
             if ws:
                 await ws.send_json(data)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             self.disconnect(client_id)

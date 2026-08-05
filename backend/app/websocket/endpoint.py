@@ -3,6 +3,18 @@ from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
 
+MAX_NEIGHBORS = 8
+VALID_NEIGHBOR_COUNTS = range(0, MAX_NEIGHBORS + 1)
+
+
+def _sanitize_rule_values(values) -> set[int]:
+    return {v for v in values if isinstance(v, int) and v in VALID_NEIGHBOR_COUNTS}
+
+
+def _serialize_rules(controller) -> dict:
+    rules = controller.get_rules()
+    return {"birth": list(rules["birth"]), "survive": list(rules["survive"])}
+
 
 async def _handle_start(controller, _message, app, client_id):
     if not controller.get_scheduled():
@@ -34,6 +46,12 @@ async def _handle_next_step(controller, _message, _app, _client_id):
     controller.game.next_step()
 
 
+async def _handle_set_rules(controller, message, _app, _client_id):
+    birth = _sanitize_rule_values(message["birth"])
+    survive = _sanitize_rule_values(message["survive"])
+    controller.set_rules({"birth": birth, "survive": survive})
+
+
 MESSAGE_HANDLERS = {
     "start": _handle_start,
     "stop": _handle_stop,
@@ -42,6 +60,7 @@ MESSAGE_HANDLERS = {
     "toggle_cell": _handle_toggle_cell,
     "grid_size": _handle_grid_size,
     "next_step": _handle_next_step,
+    "set_rules": _handle_set_rules,
 }
 
 
@@ -69,6 +88,7 @@ async def websocket_endpoint(
             "status": controller.get_status(),
             "tick": controller.get_tick(),
             "grid": controller.game.get_grid_full_state(),
+            "rules": _serialize_rules(controller),
         },
     )
 
@@ -88,6 +108,7 @@ async def websocket_endpoint(
                     "status": controller.get_status(),
                     "tick": controller.get_tick(),
                     "grid": controller.game.get_grid_full_state(),
+                    "rules": _serialize_rules(controller),
                 },
             )
 

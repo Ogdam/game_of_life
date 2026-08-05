@@ -8,6 +8,7 @@ export const useSimulationStore = create((set, get) => ({
   send: null,
   numberCellHeight: 90,
   numberCellWidth: 90,
+  rules: { birth: [3], survive: [2, 3] },
 
   setSend: (sendFn) => set({ send: sendFn }),
 
@@ -83,5 +84,12 @@ export const useSimulationStore = create((set, get) => ({
   setGridSize: (width, height) => {
     const send = get().send
     send?.({ type: 'grid_size', width, height })
+  },
+
+  setRules: (rules) => set({ rules }),
+
+  setSimulationRules: (birth, survive) => {
+    const send = get().send
+    send?.({ type: 'set_rules', birth, survive })
   },
 }))

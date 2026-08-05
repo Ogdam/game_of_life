@@ -58,6 +58,7 @@ class Runner:
                         continue
 
                     controller.step()
+                    rules = controller.get_rules()
                     await self.event_queue.put(
                         {
                             "client_id": client_id,
@@ -65,6 +66,10 @@ class Runner:
                                 "tick": controller.get_tick(),
                                 "status": controller.get_status(),
                                 "grid": controller.game.get_grid_state(),
+                                "rules": {
+                                    "birth": list(rules["birth"]),
+                                    "survive": list(rules["survive"]),
+                                },
                             },
                         }
                     )

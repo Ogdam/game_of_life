@@ -6,7 +6,7 @@ from app.engine.session_manager import SessionManager
 from app.engine.controller import State
 
 
-class Runner():
+class Runner:
 
     def __init__(self, session_manager: SessionManager, event_queue: asyncio.Queue):
         self.session_manager = session_manager
@@ -14,22 +14,22 @@ class Runner():
         self.running = True
         self._task = None
         self._heap = []
-                
+
     async def start(self):
         if self._task is None or self._task.done():
             self._task = asyncio.create_task(self.loop())
-                        
+
     async def schedule(self, client_id, controller):
-        if controller.get_status() == State.RUNNING.value and controller.get_scheduled():
+        if (
+            controller.get_status() == State.RUNNING.value
+            and controller.get_scheduled()
+        ):
             now = time.perf_counter()
 
             controller.next_tick = now + controller.speed
             controller.scheduled = True
 
-            heapq.heappush(
-                self._heap,
-                (controller.next_tick, client_id)
-            )
+            heapq.heappush(self._heap, (controller.next_tick, client_id))
 
     async def loop(self):
         try:
@@ -57,14 +57,16 @@ class Runner():
                         continue
 
                     controller.step()
-                    await self.event_queue.put({
-                        "client_id": client_id,
-                        "data": {
-                            "tick": controller.get_tick(),
-                            "status": controller.get_status(),
-                            "grid": controller.game.get_grid_state(),
+                    await self.event_queue.put(
+                        {
+                            "client_id": client_id,
+                            "data": {
+                                "tick": controller.get_tick(),
+                                "status": controller.get_status(),
+                                "grid": controller.game.get_grid_state(),
+                            },
                         }
-                    })
+                    )
 
                     next_tick = controller.next_tick + controller.speed
                     controller.next_tick = next_tick
@@ -83,6 +85,6 @@ class Runner():
             except asyncio.CancelledError:
                 pass
         self._task = None
-                
+
     def is_running(self):
         return self._task is not None and not self._task.done()

@@ -41,3 +41,16 @@ grid = [
   }
 }
 ```
+
+## API REST
+
+**GET /status** — état global du serveur (connexions et sessions en cours) :
+
+```json
+{
+  "active_connections": 3,
+  "active_sessions": 3,
+  "running_sessions": 1,
+  "paused_sessions": 2
+}
+```

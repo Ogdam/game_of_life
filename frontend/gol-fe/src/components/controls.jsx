@@ -56,15 +56,15 @@ function Controls() {
     <div className="d-flex flex-column gap-4 p-2">
       {/* 1. PLAY CONTROLS */}
       <div className="d-flex flex-column gap-2">
-        <button className="btn btn-success" onClick={start} disabled={isRunning}>
+        <button className="btn btn-gol-start" onClick={start} disabled={isRunning}>
           <i className="bi bi-play-fill"></i> Start
         </button>
 
-        <button className="btn btn-warning" onClick={stop} disabled={!isRunning}>
+        <button className="btn btn-gol-pause" onClick={stop} disabled={!isRunning}>
           <i className="bi bi-pause-fill"></i> Pause
         </button>
 
-        <button className="btn btn-danger" onClick={reset}>
+        <button className="btn btn-gol-reset" onClick={reset}>
           <i className="bi bi-arrow-counterclockwise"></i> Reset
         </button>
       </div>
@@ -102,6 +102,7 @@ function Controls() {
 
         <input
           type="range"
+          className="form-range"
           min="0.5"
           max="3"
           step="0.1"

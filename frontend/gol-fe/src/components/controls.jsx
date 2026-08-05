@@ -1,4 +1,3 @@
-import './controls.css'
 import { useState, useEffect } from 'react'
 import { useSimulationStore } from '../stores/store'
 

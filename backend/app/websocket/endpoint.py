@@ -125,9 +125,11 @@ async def websocket_endpoint(
                 {
                     "status": controller.get_status(),
                     "tick": controller.get_tick(),
-                    "grid": grid_diff
-                    if grid_diff is not None
-                    else controller.game.get_grid_full_state(),
+                    "grid": (
+                        grid_diff
+                        if grid_diff is not None
+                        else controller.game.get_grid_full_state()
+                    ),
                     "rules": _serialize_rules(controller),
                 },
             )

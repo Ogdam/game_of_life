@@ -15,6 +15,7 @@ async def load_session(db: AsyncSession, client_id: str) -> Controller | None:
     controller.speed = row.speed
     controller.tick = row.tick
     controller.game.grid = {tuple(point) for point in row.grid}
+    controller.set_rules({"birth": row.rules["birth"], "survive": row.rules["survive"]})
     return controller
 
 
@@ -27,6 +28,10 @@ async def upsert_session(client_id: str, controller: Controller, db: AsyncSessio
         "speed": controller.get_speed(),
         "tick": controller.get_tick(),
         "grid": list(controller.game.grid),
+        "rules": {
+            "birth": list(controller.get_rules()["birth"]),
+            "survive": list(controller.get_rules()["survive"]),
+        },
     }
     stmt = insert(SessionModel).values(**values)
     stmt = stmt.on_conflict_do_update(

@@ -16,40 +16,55 @@ def _serialize_rules(controller) -> dict:
     return {"birth": list(rules["birth"]), "survive": list(rules["survive"])}
 
 
+def _empty_grid_diff() -> dict:
+    return {"birth": [], "death": []}
+
+
 async def _handle_start(controller, _message, app, client_id):
     if not controller.get_scheduled():
         controller.run()
         await app.state.runner.schedule(client_id, controller)
+    return _empty_grid_diff()
 
 
 async def _handle_stop(controller, _message, _app, _client_id):
     controller.pause()
+    return _empty_grid_diff()
 
 
 async def _handle_reset(controller, _message, _app, _client_id):
     controller.reset()
+    return controller.game.get_grid_full_state()
 
 
 async def _handle_set_speed(controller, message, _app, _client_id):
     controller.set_speed(message["speed"])
+    return _empty_grid_diff()
 
 
 async def _handle_toggle_cell(controller, message, _app, _client_id):
-    controller.game.toggle_cell(message["x"], message["y"])
+    x, y = message["x"], message["y"]
+    controller.game.toggle_cell(x, y)
+    if controller.game.is_alive(x, y):
+        return {"birth": [[x, y]], "death": []}
+    return {"birth": [], "death": [[x, y]]}
 
 
 async def _handle_grid_size(controller, message, _app, _client_id):
     controller.game.set_size(message["width"], message["height"])
+    return controller.game.get_grid_full_state()
 
 
 async def _handle_next_step(controller, _message, _app, _client_id):
     controller.game.next_step()
+    return controller.game.get_grid_state()
 
 
 async def _handle_set_rules(controller, message, _app, _client_id):
     birth = _sanitize_rule_values(message["birth"])
     survive = _sanitize_rule_values(message["survive"])
     controller.set_rules({"birth": birth, "survive": survive})
+    return _empty_grid_diff()
 
 
 MESSAGE_HANDLERS = {
@@ -67,7 +82,8 @@ MESSAGE_HANDLERS = {
 async def _process_message(msg_type, controller, message, app, client_id):
     handler = MESSAGE_HANDLERS.get(msg_type)
     if handler:
-        await handler(controller, message, app, client_id)
+        return await handler(controller, message, app, client_id)
+    return None
 
 
 @router.websocket("/ws")
@@ -99,7 +115,9 @@ async def websocket_endpoint(
             print(msg_type)
 
             # ---- RECEPTION CLIENT → SERVEUR ----
-            await _process_message(msg_type, controller, message, app, client_id)
+            grid_diff = await _process_message(
+                msg_type, controller, message, app, client_id
+            )
 
             # ---- PUSH SERVEUR → CLIENT ----
             await app.state.ws_manager.send(
@@ -107,7 +125,9 @@ async def websocket_endpoint(
                 {
                     "status": controller.get_status(),
                     "tick": controller.get_tick(),
-                    "grid": controller.game.get_grid_full_state(),
+                    "grid": grid_diff
+                    if grid_diff is not None
+                    else controller.game.get_grid_full_state(),
                     "rules": _serialize_rules(controller),
                 },
             )

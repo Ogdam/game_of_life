@@ -7,6 +7,7 @@
   - Tests : Jest / Vitest,  couverture minimum 70%
   - Formatter : Prettier
   - Linter : ESLint
+  - Communication : WebSocket + REST (fetch)
 
  ## BackEnd :
   - Langage/framework : python 3.9+, FastAPI
@@ -14,3 +15,4 @@
   - Tests : pytest,  couverture minimum 70%
   - Formatter : Black
   - Linter : Pylint
+  - Communication temps réel : WebSocket natif (FastAPI)

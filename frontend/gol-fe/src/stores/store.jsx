@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { cantor_calcul } from "../utils/common";
+import { create } from 'zustand'
+import { cantor_calcul } from '../utils/common'
 
 export const useSimulationStore = create((set, get) => ({
   generation: 0,
@@ -17,41 +17,34 @@ export const useSimulationStore = create((set, get) => ({
   setNumberCellWidth: (w) => set({ numberCellWidth: w }),
   setNumberCellHeight: (h) => set({ numberCellHeight: h }),
 
-
   setFullGrid: (grid, tick) => {
-    const newGrid = new Map();
+    const newGrid = new Map()
 
     for (const c of grid) {
-      newGrid.set(
-        cantor_calcul(c[0], c[1]),
-        { tick, x: c[0], y: c[1] }
-      );
+      newGrid.set(cantor_calcul(c[0], c[1]), { tick, x: c[0], y: c[1] })
     }
 
     set({
       currentGrid: newGrid,
       generation: tick,
-    });
+    })
   },
 
   applyBirthDeath: (birth, death, tick) => {
-    const newGrid = new Map(get().currentGrid);
+    const newGrid = new Map(get().currentGrid)
 
     for (const c of birth) {
-      newGrid.set(
-        cantor_calcul(c[0], c[1]),
-        { tick, x: c[0], y: c[1] }
-      );
+      newGrid.set(cantor_calcul(c[0], c[1]), { tick, x: c[0], y: c[1] })
     }
 
     for (const c of death) {
-      newGrid.delete(cantor_calcul(c[0], c[1]));
+      newGrid.delete(cantor_calcul(c[0], c[1]))
     }
 
     set({
       currentGrid: newGrid,
       generation: tick,
-    });
+    })
   },
 
   resetLocal: () =>
@@ -62,34 +55,33 @@ export const useSimulationStore = create((set, get) => ({
     }),
 
   start: () => {
-    const send = get().send;
-    send?.({ type: "start" });
+    const send = get().send
+    send?.({ type: 'start' })
   },
 
   stop: () => {
-    const send = get().send;
-    send?.({ type: "stop" });
+    const send = get().send
+    send?.({ type: 'stop' })
   },
 
   reset: () => {
-    const send = get().send;
-    send?.({ type: "reset" });
-    get().resetLocal();
+    const send = get().send
+    send?.({ type: 'reset' })
+    get().resetLocal()
   },
 
   toggleCell: (x, y) => {
-    const send = get().send;
-    send?.({ type: "toggle_cell", x, y });
+    const send = get().send
+    send?.({ type: 'toggle_cell', x, y })
   },
 
-  setTickRate : (speed) => {
-    const send = get().send;
-    send?.({ type: "set_speed", speed });
+  setTickRate: (speed) => {
+    const send = get().send
+    send?.({ type: 'set_speed', speed })
   },
 
   setGridSize: (width, height) => {
-    const send = get().send;
-    send?.({ type: "grid_size", width, height});
+    const send = get().send
+    send?.({ type: 'grid_size', width, height })
   },
-
-}));
+}))

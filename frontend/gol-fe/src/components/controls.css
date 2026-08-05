@@ -1,14 +1,13 @@
 .controls {
-    display: flex;
-    gap: 0.5rem;
-    padding: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 .controls button {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
-
 
 .sidebar {
   position: fixed;

@@ -38,7 +38,7 @@ export default function Grid(props) {
       await app.init({
         width: props.gridWidth,
         height: props.gridHeight,
-        background: '#222',
+        background: '#1c1c1c',
       })
 
       if (isDestroyed) {

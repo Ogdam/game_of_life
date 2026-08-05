@@ -8,7 +8,7 @@ grid = [
 
 - **Vite** (build tool - plus rapide que CRA)
 - **React 19+** (UI)
-- **TypeScript** (typage)
+- **JavaScript** (JSX, pas de typage statique — ESLint + Prettier pour la qualité)
 - **Zustand** (state management léger)
 - **Canvas** (rendu grille, pas DOM)
 

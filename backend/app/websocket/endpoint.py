@@ -1,5 +1,5 @@
 import uuid
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
 
@@ -52,12 +52,25 @@ async def _process_message(msg_type, controller, message, app, client_id):
 
 
 @router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(
+    websocket: WebSocket, client_id: str | None = Query(default=None)
+):
     app = websocket.app
 
-    client_id = str(uuid.uuid4())
-    controller = app.state.session_manager.get_or_create(client_id)
+    client_id = client_id or str(uuid.uuid4())
+    controller = await app.state.session_manager.get_or_create(client_id)
     await app.state.ws_manager.connect(websocket, client_id)
+
+    await app.state.ws_manager.send(
+        client_id,
+        {
+            "type": "client_id",
+            "client_id": client_id,
+            "status": controller.get_status(),
+            "tick": controller.get_tick(),
+            "grid": controller.game.get_grid_full_state(),
+        },
+    )
 
     try:
         while True:
@@ -78,6 +91,14 @@ async def websocket_endpoint(websocket: WebSocket):
                 },
             )
 
+            await app.state.session_manager.persist(client_id)
+
     except WebSocketDisconnect:
+        try:
+            await app.state.session_manager.persist(client_id)
+        except Exception:  # pylint: disable=broad-exception-caught
+            # Best-effort persistence on disconnect: ne doit jamais empêcher
+            # le nettoyage de la session (cf. dispatcher.py/manager.py).
+            pass
         app.state.ws_manager.disconnect(client_id)
         app.state.session_manager.remove(client_id)

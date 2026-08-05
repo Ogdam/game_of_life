@@ -25,3 +25,6 @@ disable = [
 
 # La règle "pas de magic numbers" (docs/code-quality.md) n'a pas d'équivalent
 # Pylint automatique fiable : elle reste vérifiée en revue de code.
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

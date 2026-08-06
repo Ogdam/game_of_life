@@ -75,7 +75,7 @@ class Runner:
                     )
                     self._schedule_persist(client_id)
 
-                    next_tick = controller.next_tick + controller.speed
+                    next_tick = max(controller.next_tick + controller.speed, now + 1e-3)
                     controller.next_tick = next_tick
 
                     heapq.heappush(self._heap, (next_tick, client_id))

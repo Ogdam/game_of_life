@@ -4,7 +4,7 @@
 - Primaire : #005a5c (ex. boutons, actions principales)
 - Secondaire : #007959
 - Fond : #282828
-- - Cellule vivante : dégradé de #007959 à #005a5c selon l'âge de la cellul
+- Cellule vivante : dégradé de #00b386 à #0d2f30 selon l'âge de la cellule (15 ticks)
 - Cellule morte / grille : #1c1c1c
 
 ## Typographie

@@ -1,5 +1,8 @@
+import logging
 import uuid
 from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -112,7 +115,9 @@ async def websocket_endpoint(
         while True:
             message = await websocket.receive_json()
             msg_type = message.get("type")
-            print(msg_type)
+            logger.debug(
+                "WS message received: client_id=%s type=%s", client_id, msg_type
+            )
 
             # ---- RECEPTION CLIENT → SERVEUR ----
             grid_diff = await _process_message(
@@ -137,6 +142,7 @@ async def websocket_endpoint(
             await app.state.session_manager.persist(client_id)
 
     except WebSocketDisconnect:
+        logger.info("WS disconnect received: client_id=%s", client_id)
         try:
             await app.state.session_manager.persist(client_id)
         except Exception:  # pylint: disable=broad-exception-caught

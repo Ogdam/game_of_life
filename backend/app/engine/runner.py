@@ -1,9 +1,12 @@
 import asyncio
 import heapq
+import logging
 import time
 
 from app.engine.session_manager import SessionManager
 from app.engine.controller import State
+
+logger = logging.getLogger(__name__)
 
 
 class Runner:
@@ -82,6 +85,9 @@ class Runner:
 
         except asyncio.CancelledError:
             pass
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.error("Runner loop crashed", exc_info=True)
+            raise
 
     def _schedule_persist(self, client_id):
         task = asyncio.create_task(self._persist_safely(client_id))
@@ -93,7 +99,7 @@ class Runner:
             await self.session_manager.persist(client_id)
         except Exception:  # pylint: disable=broad-exception-caught
             # La persistance ne doit jamais casser la boucle de tick (hot path).
-            pass
+            logger.error("Persist failed: client_id=%s", client_id, exc_info=True)
 
     async def stop(self):
         self.running = False

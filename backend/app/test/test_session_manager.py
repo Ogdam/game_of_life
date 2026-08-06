@@ -51,3 +51,25 @@ async def test_remove_pops_controller_from_cache():
     manager.remove("client-3")
 
     assert "client-3" not in manager.controllers
+
+
+@pytest.mark.asyncio
+async def test_persist_upserts_and_commits_when_controller_cached():
+    factory = _sessionmaker()
+    manager = SessionManager(factory)
+    await manager.get_or_create("client-4")
+
+    await manager.persist("client-4")
+
+    factory.db_session.execute.assert_awaited_once()
+    factory.db_session.commit.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_persist_is_noop_when_controller_not_cached():
+    factory = _sessionmaker()
+    manager = SessionManager(factory)
+
+    await manager.persist("unknown-client")
+
+    factory.db_session.execute.assert_not_awaited()

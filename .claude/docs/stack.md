@@ -16,3 +16,8 @@
   - Formatter : Black
   - Linter : Pylint
   - Communication temps réel : WebSocket natif (FastAPI)
+
+ ## Déploiement :
+  - Dev local : docker-compose
+  - Orchestration au-delà du dev local : Kubernetes (Deployments + Services + Ingress)
+  - Ingress controller : nginx-ingress

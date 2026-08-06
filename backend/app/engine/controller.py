@@ -8,6 +8,9 @@ class State(Enum):
     RUNNING = "running"
 
 
+MIN_SPEED = 0.01
+
+
 class Controller:
 
     def __init__(self, height=90, width=90):
@@ -31,8 +34,8 @@ class Controller:
         self.scheduled = False
         self.tick = 0
 
-    def set_speed(self, speed: int):
-        self.speed = speed
+    def set_speed(self, speed: float):
+        self.speed = max(speed, MIN_SPEED)
 
     def get_scheduled(self):
         return self.scheduled

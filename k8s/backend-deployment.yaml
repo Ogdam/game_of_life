@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: game_of_life-backend:latest
+          imagePullPolicy: Never
+          command:
+            - sh
+            - -c
+            - "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ENV
+              value: development
+          envFrom:
+            - secretRef:
+                name: backend-secret
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5

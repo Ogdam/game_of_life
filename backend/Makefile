@@ -10,7 +10,7 @@ format-check:
 	black --check .
 
 test:
-	cd app && pytest
+	PYTHONPATH=.:app pytest app --cov=app --cov-report=term-missing
 
 migrate:
 	alembic upgrade head

@@ -28,3 +28,11 @@ disable = [
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/test/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 70

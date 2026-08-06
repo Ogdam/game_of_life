@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.logging_config import configure_logging
 from app.websocket.dispatcher import ws_dispatcher
 from app.db.engine import create_db_engine, create_session_factory
 from app.engine.session_manager import SessionManager
@@ -12,6 +13,8 @@ from app.api.rest import router as rest_router
 
 from app.websocket.manager import WSManager
 from app.websocket.endpoint import router as ws_router
+
+configure_logging()
 
 
 @asynccontextmanager

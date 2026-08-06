@@ -16,21 +16,21 @@ describe('cantor_calcul', () => {
 
 describe('getCellColor', () => {
   it('returns the birth color when the cell just appeared', () => {
-    expect(getCellColor(10, 10)).toBe(0x007959)
+    expect(getCellColor(10, 10)).toBe(0x00b386)
   })
 
   it('returns the aged color once the cell reaches the max age', () => {
-    expect(getCellColor(100, 0)).toBe(0x005a5c)
+    expect(getCellColor(15, 0)).toBe(0x0d2f30)
   })
 
   it('clamps age beyond the max age threshold to the aged color', () => {
-    expect(getCellColor(500, 0)).toBe(0x005a5c)
+    expect(getCellColor(500, 0)).toBe(0x0d2f30)
   })
 
   it('interpolates the color between birth and aged colors', () => {
-    const color = getCellColor(50, 0)
-    expect(color).toBe(0x6a5b)
-    expect(color).toBeLessThan(0x007959)
-    expect(color).toBeGreaterThan(0x005a5c)
+    const color = getCellColor(7, 0)
+    expect(color).toBe(0x06755e)
+    expect(color).toBeGreaterThan(0x00b386)
+    expect(color).toBeLessThan(0x0d2f30)
   })
 })

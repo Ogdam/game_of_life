@@ -31,7 +31,7 @@ async def lifespan(fastapi_app: FastAPI):
     fastapi_app.state.dispatcher_task = asyncio.create_task(ws_dispatcher(fastapi_app))
 
     yield
-    fastapi_app.state.runner.stop()
+    await fastapi_app.state.runner.stop()
     fastapi_app.state.dispatcher_task.cancel()
     try:
         await fastapi_app.state.dispatcher_task

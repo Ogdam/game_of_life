@@ -1,101 +1,121 @@
-'use client';
+'use client'
 
-import { useEffect, useRef } from 'react';
-import { Application, Graphics } from 'pixi.js';
-import {cantor_calcul, getCellColor} from '../utils/common';
+import { useEffect, useRef } from 'react'
+import { Application, Graphics } from 'pixi.js'
+import { getCellColor } from '../utils/common'
+import { useSimulationStore } from '../stores/store'
 
 export default function Grid(props) {
-    const containerRef = useRef(null);
-    const appRef = useRef(null);
-    const renderedCells = useRef(new Map());
+  const toggleCell = useSimulationStore((s) => s.toggleCell)
+  const currentGrid = useSimulationStore((s) => s.currentGrid)
+  const generation = useSimulationStore((s) => s.generation)
+  const numberCellHeight = useSimulationStore((s) => s.numberCellHeight)
+  const numberCellWidth = useSimulationStore((s) => s.numberCellWidth)
 
-    // INIT ONCE
-    useEffect(() => {
-        let isDestroyed = false;
+  const containerRef = useRef(null)
+  const appRef = useRef(null)
+  const renderedCells = useRef(new Map())
 
-        (async () => {
-            const app = new Application();
+  // 1. Calcul des dimensions actuelles
+  const cellHeight = props.gridHeight / numberCellHeight
+  const cellWidth = props.gridWidth / numberCellWidth
 
-            await app.init({
-                width: props.width,
-                height: props.height,
-                background: '#222'
-            });
+  // 2. Stockage des dimensions dans des refs pour qu'elles soient accessibles partout sans closure obsolète
+  const cellDimensionsRef = useRef({ cellWidth, cellHeight })
 
-            if (isDestroyed) {
-                app.destroy(true, { children: true, texture: true, context: true });
-                return;
-            }
+  // On met à jour les refs à chaque rendu pour qu'elles soient toujours clean
+  useEffect(() => {
+    cellDimensionsRef.current = { cellWidth, cellHeight }
+  }, [cellWidth, cellHeight])
 
-            app.stage.eventMode = 'static';
-            app.stage.hitArea = app.screen;
+  // INIT ONCE
+  useEffect(() => {
+    let isDestroyed = false
 
-            appRef.current = app;
-            containerRef.current?.appendChild(app.canvas);
+    ;(async () => {
+      const app = new Application()
 
-            const size = 10;
+      await app.init({
+        width: props.gridWidth,
+        height: props.gridHeight,
+        background: '#1c1c1c',
+      })
 
-            app.stage.on('pointerdown', (event) => {
-                const pos = event.global;
-                const x = Math.floor(pos.x / size);
-                const y = Math.floor(pos.y / size);
-                props.toggle_cell(x, y);
-            });
-        })();
+      if (isDestroyed) {
+        app.destroy(true, { children: true, texture: true, context: true })
+        return
+      }
 
-        return () => {
-            isDestroyed = true;
+      app.stage.eventMode = 'static'
+      app.stage.hitArea = app.screen
 
-            if (appRef.current) {
-                appRef.current.destroy(true, {
-                    children: true,
-                    texture: true,
-                    context: true
-                });
-                appRef.current = null;
-            }
-        };
-    }, []);
+      appRef.current = app
+      containerRef.current?.appendChild(app.canvas)
 
-    useEffect(() => {
-        const app = appRef.current;
-        if (!app) return;
+      app.stage.on('pointerdown', (event) => {
+        const pos = event.global
 
-        const size = 10;
-        const map = renderedCells.current;
+        // 3. On utilise les valeurs de la ref ici !
+        const currentWidth = cellDimensionsRef.current.cellWidth
+        const currentHeight = cellDimensionsRef.current.cellHeight
 
-        // ADD / UPDATE
-        for (const [id, data] of props.grid) {
-            const cell = map.get(id);
+        const x = Math.floor(pos.x / currentWidth)
+        const y = Math.floor(pos.y / currentHeight)
+        toggleCell(x, y)
+      })
+    })()
 
-            if (!cell) {
-                const newCell = new Graphics();
+    return () => {
+      isDestroyed = true
 
-                newCell.rect(0, 0, size, size);
-                newCell.x = data.x * size;
-                newCell.y = data.y * size;
+      if (appRef.current) {
+        appRef.current.destroy(true, {
+          children: true,
+          texture: true,
+          context: true,
+        })
+        appRef.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // On garde le tableau vide pour ne pas recréer l'application Pixi
 
-                map.set(id, newCell);
-                app.stage.addChild(newCell);
-            }
+  // RENDER / UPDATE CELLS
+  useEffect(() => {
+    const app = appRef.current
+    if (!app) return
 
-            const gfx = map.get(id);
+    const map = renderedCells.current
 
-            gfx.clear();
-            gfx.rect(0, 0, size, size);
-            gfx.fill(getCellColor(props.generation, data.tick));
-        }
+    // ADD / UPDATE
+    for (const [id, data] of currentGrid) {
+      let cell = map.get(id)
 
-        // REMOVE
-        for (const [id, cell] of map.entries()) {
-            if (props.grid.has(id)) continue;
+      if (!cell) {
+        cell = new Graphics()
+        map.set(id, cell)
+        app.stage.addChild(cell)
+      }
 
-            app.stage.removeChild(cell);
-            cell.destroy();
-            map.delete(id);
-        }
+      // On redessine et repositionne avec les tailles actuelles
+      cell.clear()
+      cell.rect(0, 0, cellWidth, cellHeight)
+      cell.x = data.x * cellWidth
+      cell.y = data.y * cellHeight
+      cell.fill(getCellColor(generation, data.tick))
+    }
 
-    }, [props.grid, props.generation]);
+    // REMOVE
+    for (const [id, cell] of map.entries()) {
+      if (currentGrid.has(id)) continue
 
-    return <div ref={containerRef} />;
+      app.stage.removeChild(cell)
+      cell.destroy()
+      map.delete(id)
+    }
+
+    // 4. On ajoute cellWidth et cellHeight aux dépendances pour redessiner la grille si la taille change
+  }, [currentGrid, generation, cellWidth, cellHeight])
+
+  return <div ref={containerRef} />
 }

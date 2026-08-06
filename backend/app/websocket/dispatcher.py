@@ -1,3 +1,8 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 async def ws_dispatcher(app):
     while True:
         event = await app.state.event_queue.get()
@@ -5,8 +10,9 @@ async def ws_dispatcher(app):
         client_id = event["client_id"]
         data = event["data"]
 
-        try: 
+        try:
             await app.state.ws_manager.send(client_id, data)
-        except:
+        except Exception:  # pylint: disable=broad-exception-caught
+            logger.error("WS dispatch failed: client_id=%s", client_id, exc_info=True)
             app.state.ws_manager.disconnect(client_id)
             app.state.session_manager.remove(client_id)

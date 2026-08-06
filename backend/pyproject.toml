@@ -1,0 +1,30 @@
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311"]
+
+[tool.pylint.main]
+load-plugins = ["pylint.extensions.mccabe"]
+ignore = ["__pycache__", ".venv"]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.design]
+max-complexity = 10
+# Pylint n'a pas de check ligne-par-fonction exact ; max-statements sert de proxy
+# documenté pour la règle "fonctions < 50 lignes" (docs/code-quality.md).
+max-statements = 50
+max-module-lines = 300
+
+[tool.pylint."messages control"]
+disable = [
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+]
+
+# La règle "pas de magic numbers" (docs/code-quality.md) n'a pas d'équivalent
+# Pylint automatique fiable : elle reste vérifiée en revue de code.
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

@@ -1,10 +1,72 @@
-.controls {
-    display: flex;
-    gap: 0.5rem;
-    padding: 1rem;
+.gol-sidebar {
+  min-height: 100%;
 }
 
-.controls button {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+.gol-sidebar-header {
+  padding-bottom: var(--gol-space-2);
+  border-bottom: 1px solid var(--gol-color-border);
+}
+
+.gol-sidebar-title {
+  font-size: var(--gol-font-size-title);
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--gol-space-1);
+  margin: 0 0 var(--gol-space-1);
+  font-size: var(--gol-font-size-title);
+  font-weight: 600;
+  color: var(--gol-color-text);
+}
+
+.btn-gol-start {
+  --bs-btn-color: var(--gol-color-text);
+  --bs-btn-bg: var(--gol-color-secondary);
+  --bs-btn-border-color: var(--gol-color-secondary);
+  --bs-btn-hover-bg: var(--gol-color-primary);
+  --bs-btn-hover-border-color: var(--gol-color-primary);
+  --bs-btn-active-bg: var(--gol-color-primary);
+  --bs-btn-active-border-color: var(--gol-color-primary);
+  --bs-btn-border-radius: var(--gol-radius);
+}
+
+.btn-gol-pause {
+  --bs-btn-color: var(--gol-color-text);
+  --bs-btn-bg: var(--gol-color-primary);
+  --bs-btn-border-color: var(--gol-color-primary);
+  --bs-btn-hover-bg: var(--gol-color-secondary);
+  --bs-btn-hover-border-color: var(--gol-color-secondary);
+  --bs-btn-active-bg: var(--gol-color-secondary);
+  --bs-btn-active-border-color: var(--gol-color-secondary);
+  --bs-btn-border-radius: var(--gol-radius);
+}
+
+.btn-gol-reset {
+  --bs-btn-color: var(--gol-color-text);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--gol-color-primary);
+  --bs-btn-hover-color: var(--gol-color-text);
+  --bs-btn-hover-bg: var(--gol-color-primary);
+  --bs-btn-hover-border-color: var(--gol-color-primary);
+  --bs-btn-border-radius: var(--gol-radius);
+}
+
+.form-range {
+  accent-color: var(--gol-color-secondary);
+}
+.form-range::-webkit-slider-thumb {
+  background-color: var(--gol-color-secondary);
+}
+.form-range::-moz-range-thumb {
+  background-color: var(--gol-color-secondary);
+}
+.form-range::-webkit-slider-runnable-track {
+  background-color: var(--gol-color-primary);
+}
+.form-range::-moz-range-track {
+  background-color: var(--gol-color-primary);
 }

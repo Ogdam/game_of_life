@@ -1,24 +1,26 @@
 from fastapi import APIRouter, Request
 
+from app.engine.controller import State
+from app.schemas.status import ServerStatusResponse
+
 router = APIRouter()
 
-# @router.get("/healthcheck")
-# def start(request: Request):
-#     request.app.state.controller.run()
-#     return {"status":  request.app.state.controller.get_status()}
 
-# @router .get("/sessions")
-# def pause(request: Request):
-#     request.app.state.controller.pause()
-#     return {"status":  request.app.state.controller.get_status()}
+@router.get("/status", response_model=ServerStatusResponse)
+def get_status(request: Request) -> ServerStatusResponse:
+    ws_manager = request.app.state.ws_manager
+    session_manager = request.app.state.session_manager
 
-# @router .get("/session/{client_id}")
-# def reset(request: Request):
-#     request.app.state.controller.reset()
-#     return {"status":  request.app.state.controller.get_status()}
+    active_sessions = len(session_manager.controllers)
+    running_sessions = sum(
+        1
+        for controller in session_manager.controllers.values()
+        if controller.get_status() == State.RUNNING.value
+    )
 
-
-# @router .post("/ws/connections")
-# def set_size(request: Request, height: int, width: int):
-#     request.app.state.controller.game.set_size(height, width)
-#     return {"grid":  request.app.state.controller.game.get_grid_state()}
+    return ServerStatusResponse(
+        active_connections=len(ws_manager.clients),
+        active_sessions=active_sessions,
+        running_sessions=running_sessions,
+        paused_sessions=active_sessions - running_sessions,
+    )

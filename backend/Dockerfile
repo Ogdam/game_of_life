@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie du reste du code
 COPY ./app ./app
+COPY ./alembic ./alembic
+COPY alembic.ini .
 
 # FastAPI tourne par défaut sur le port 8000
 EXPOSE 8000

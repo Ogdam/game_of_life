@@ -11,6 +11,13 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    proxy: {
+      '/ws': {
+        target: 'http://backend:8000',
+        ws: true,
+        changeOrigin: true,
+      },
+    },
   },
   test: {
     environment: 'jsdom',

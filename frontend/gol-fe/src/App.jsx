@@ -7,7 +7,8 @@ import { useSimulationStore } from './stores/store'
 import './App.css'
 
 initSocketBridge()
-socket.connect('ws://localhost:8000/ws')
+const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+socket.connect(`${wsProtocol}//${window.location.host}/ws`)
 useSimulationStore.getState().setSend(socket.send.bind(socket))
 
 function App() {

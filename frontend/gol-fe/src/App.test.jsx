@@ -20,7 +20,8 @@ const { default: App } = await import('./App')
 
 describe('App', () => {
   it('connects the socket and registers the send function on load', () => {
-    expect(connect).toHaveBeenCalledWith('ws://localhost:8000/ws')
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    expect(connect).toHaveBeenCalledWith(`${wsProtocol}//${window.location.host}/ws`)
   })
 
   it('renders the sidebar and the grid', () => {

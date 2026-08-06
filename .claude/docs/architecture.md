@@ -68,3 +68,11 @@ grid = [
   "paused_sessions": 2
 }
 ```
+
+# Déploiement Kubernetes
+
+* 3 Deployments à 1 replica chacun : `backend`, `frontend`, `postgres`, chacun exposé via un Service dédié (`k8s/`).
+* Un Ingress (classe `nginx`) unifie front et back sous une même origine : `/ws`, `/status`, `/docs`, `/openapi.json`, `/redoc` routent vers le Service backend, `/` (catch-all) vers le Service frontend.
+* Même origine front/back : le frontend ouvre le WebSocket via une URL relative (`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/ws`), sans URL backend en dur.
+* Postgres est persisté via un PVC (`postgres-pvc.yaml`), monté par le Deployment `postgres`.
+* Images backend/frontend buildées localement (`imagePullPolicy: Never`), pas de registry — adapté à un cluster local type Docker Desktop Kubernetes.
